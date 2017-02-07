@@ -45,6 +45,8 @@
 #include "client2.h"
 
 #include <message.h>
+#include <mutex.h>
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,9 +68,12 @@ extern "C" {
  * max # of waiting messages
  */
 #define NUM_HANDLER_MESSAGES	(10)
+
 /*
- * end max # of waiting messages
+ * max # of clients who can open read or write access
  */
+#define MAX_DEVICES			20
+
 /*
  * structures
  */
@@ -77,8 +82,23 @@ typedef struct handler_message
 	MESSAGE_HEADER_STRUCT HEADER;
 	unsigned char DATA[256];
 } HANDLER_MESSAGE, * HANDLER_MESSAGE_PTR;
+
+typedef struct device
+{
+	_task_id client_id;
+	_queue_id client_qid;
+	bool read_access;
+} DEVICE_STRUCT;
 /*
  * end of structures
+ */
+
+/*
+ * mutexes
+ */
+MUTEX_STRUCT device_mutex;
+/*
+ * end of mutexes
  */
 
 /*
@@ -93,6 +113,7 @@ typedef struct handler_message
 void serial_task(os_task_param_t task_init_data);
 
 extern _pool_id message_pool;
+extern bool OpenR(_mqx_uint stream_no);
 
 /* END os_tasks */
 

@@ -41,8 +41,65 @@ extern "C" {
 /* declaration of global message pool */
 _pool_id	message_pool;
 
+/* declaration of devices list */
+DEVICE_STRUCT opened_devices[MAX_DEVICES];
+
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
+/*
+ * Public serial access functions: OpenR, _readline, OpenW, _putline, Close
+ */
+
+/* OpenR - Allow read access for a client */
+bool OpenR(_mqx_uint stream_no) {
+	/* obtain device_mutex */
+	if(_mutex_lock(&device_mutex) != MQX_OK) {
+		printf("\nError when trying to obtain device_mutex.\n");
+		return FALSE;
+	}
+
+	/* check if the device has already requested read access */
+	if(opened_devices[stream_no].client_id == 0) {
+
+		/* get queue id from client queue number (stream_no) */
+		_queue_id client_qid = _msgq_get_id(0, stream_no);
+		if(client_qid == MSGQ_NULL_QUEUE_ID) {
+			printf("\nError getting client queue id from queue number.\n");
+			_mutex_unlock(&device_mutex);
+			return FALSE;
+		}
+
+		/* get client task id from client_qid */
+		_task_id client_task = _msgq_get_owner(client_qid);
+		if(client_task == MQX_NULL_TASK_ID) {
+			printf("\nError getting client task id from queue id.\n");
+			_mutex_unlock(&device_mutex);
+			return FALSE;
+		}
+
+		opened_devices[stream_no] = (DEVICE_STRUCT) {
+			.client_id = client_task,
+			.client_qid = client_qid,
+			.read_access = TRUE };
+	} else {
+		_mutex_unlock(&device_mutex);
+		return FALSE;
+	}
+
+	/* release device_mutex */
+	_mutex_unlock(&device_mutex);
+
+	printf("device %d opened: %d, %d, %d\n", stream_no, opened_devices[stream_no].client_id, opened_devices[stream_no].client_qid, opened_devices[stream_no].read_access);
+	return TRUE;
+}
+
+/*
+ * End of public serial access functions
+ */
+
+
+
+/* Handle character input */
 void handle_char(unsigned char c) {
 	if (c==0x08) {
 		printf("got a backspace\n");
@@ -54,6 +111,8 @@ void handle_char(unsigned char c) {
 		printf("%c", c);
 	}
 }
+
+
 
 /*
 ** ===================================================================
@@ -88,6 +147,17 @@ void serial_task(os_task_param_t task_init_data)
 
 	if (message_pool == MSGPOOL_NULL_POOL_ID) {
 		printf("\nCould not create a message pool\n");
+		_task_block();
+	}
+
+	/* initialize opened_devices */
+	for(i = 0; i < MAX_DEVICES; i++) {
+		opened_devices[i] = (DEVICE_STRUCT) {0,0,0};
+	}
+
+	/* initialize device_mutex */
+	if(_mutex_init(&device_mutex, NULL) != MQX_OK){
+		printf("\nCould not create device list mutex.\n");
 		_task_block();
 	}
 

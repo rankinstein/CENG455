@@ -68,6 +68,8 @@ void client2_task(os_task_param_t task_init_data)
 		_task_block();
 	}
 
+	OpenR(CLIENT2_QUEUE);
+
 #ifdef PEX_USE_RTOS
   while (1) {
 #endif

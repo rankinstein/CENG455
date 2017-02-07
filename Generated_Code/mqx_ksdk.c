@@ -7,7 +7,7 @@
 **     Version     : Component 1.2.0, Driver 01.00, CPU db: 3.00.000
 **     Repository  : KSDK 1.3.0
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-30, 16:14, # CodeGen: 1
+**     Date/Time   : 2017-02-06, 17:24, # CodeGen: 5
 **
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -57,8 +57,12 @@
 /* Application specific header file */
 #include "rtos_main_task.h"
 #include "os_tasks.h"
+#include "client_task1.h"
+#include "client_task2.h"
 #include "MainTask.h"
 #include "serialTask.h"
+#include "client1.h"
+#include "client2.h"
 extern void * kernel_data_prv;
 #if MQXCFG_PREALLOCATED_SYSTEM_STACKS
 extern uint8_t mqx_interrupt_stack[];
@@ -89,6 +93,28 @@ const TASK_TEMPLATE_STRUCT MQX_template_list[] =
     /* Stack size                     */  SERIALTASK_TASK_STACK_SIZE,
     /* Task priority                  */  (PRIORITY_OSA_TO_RTOS(SERIALTASK_TASK_PRIORITY)),
     /* Task name                      */  SERIALTASK_TASK_NAME,
+    /* Task attributes                */  (0),
+    /* Task parameter                 */  (uint32_t)(NULL),
+    /* Task time slice                */  (uint32_t)(0U)
+  },       
+  /* Task: client1 */
+  {
+    /* Task number                    */  CLIENT1_TASK,
+    /* Entry point                    */  (TASK_FPTR)client1_task,
+    /* Stack size                     */  CLIENT1_TASK_STACK_SIZE,
+    /* Task priority                  */  (PRIORITY_OSA_TO_RTOS(CLIENT1_TASK_PRIORITY)),
+    /* Task name                      */  CLIENT1_TASK_NAME,
+    /* Task attributes                */  (0),
+    /* Task parameter                 */  (uint32_t)(NULL),
+    /* Task time slice                */  (uint32_t)(0U)
+  },       
+  /* Task: client2 */
+  {
+    /* Task number                    */  CLIENT2_TASK,
+    /* Entry point                    */  (TASK_FPTR)client2_task,
+    /* Stack size                     */  CLIENT2_TASK_STACK_SIZE,
+    /* Task priority                  */  (PRIORITY_OSA_TO_RTOS(CLIENT2_TASK_PRIORITY)),
+    /* Task name                      */  CLIENT2_TASK_NAME,
     /* Task attributes                */  (0),
     /* Task parameter                 */  (uint32_t)(NULL),
     /* Task time slice                */  (uint32_t)(0U)

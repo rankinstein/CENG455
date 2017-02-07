@@ -1,73 +1,96 @@
 /* ###################################################################
-**     Filename    : rtos_main_task.h
+**     Filename    : client_task1.c
 **     Project     : serial_echo
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-30, 16:14, # CodeGen: 1
+**     Date/Time   : 2017-02-06, 17:22, # CodeGen: 4
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
 **     Settings    :
 **     Contents    :
-**         main_task - void main_task(os_task_param_t task_init_data);
+**         client1_task - void client1_task(os_task_param_t task_init_data);
 **
 ** ###################################################################*/
 /*!
-** @file rtos_main_task.h
+** @file client_task1.c
 ** @version 01.00
 ** @brief
 **         This is user's event module.
 **         Put your event handler code here.
 */         
 /*!
-**  @addtogroup rtos_main_task_module rtos_main_task module documentation
+**  @addtogroup client_task1_module client_task1 module documentation
 **  @{
 */         
+/* MODULE client_task1 */
 
-#ifndef __rtos_main_task_H
-#define __rtos_main_task_H
-/* MODULE rtos_main_task */
-
-#include "fsl_device_registers.h"
-#include "clockMan1.h"
-#include "pin_init.h"
-#include "osa1.h"
-#include "mqx_ksdk.h"
-#include "uart1.h"
-#include "fsl_mpu1.h"
-#include "fsl_hwtimer1.h"
-#include "MainTask.h"
-#include "serialTask.h"
-#include "myUART.h"
-#include "client1.h"
-#include "client2.h"
+#include "Cpu.h"
+#include "Events.h"
+#include "rtos_main_task.h"
+#include "os_tasks.h"
+#include "client_task1.h"
+#include "client_task2.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
+
+/* User includes (#include below this line is not maintained by Processor Expert) */
+
 /*
 ** ===================================================================
-**     Callback    : main_task
+**     Callback    : client1_task
 **     Description : Task function entry.
 **     Parameters  :
 **       task_init_data - OS task parameter
 **     Returns : Nothing
 ** ===================================================================
 */
-void main_task(os_task_param_t task_init_data);
+void client1_task(os_task_param_t task_init_data)
+{
+  /* Write your local variable definition here */
+  
+	printf("clientTask1 Created\n\r");
+
+	HANDLER_MESSAGE_PTR client1_ptr;
+	_mqx_uint	i;
+	_queue_id	client1_qid;
+	bool		result;
+
+	/* open a message queue */
+	client1_qid = _msgq_open(CLIENT1_QUEUE, 0);
+
+	if (client1_qid == 0) {
+		printf("\nCould not open client1 queue.\n");
+		_task_block();
+	}
 
 
-/* END rtos_main_task */
+#ifdef PEX_USE_RTOS
+  while (1) {
+#endif
+    /* Write your code here ... */
+    
+    
+    OSA_TimeDelay(10);                 /* Example code (for task release) */
+   
+    
+    
+#ifdef PEX_USE_RTOS   
+  }
+#endif    
+}
+
+/* END client_task1 */
 
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif 
 
-#endif 
-/* ifndef __rtos_main_task_H*/
 /*!
 ** @}
 */

@@ -1,34 +1,34 @@
 /* ###################################################################
-**     Filename    : Events.h
+**     Filename    : client_task1.h
 **     Project     : serial_echo
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-30, 16:02, # CodeGen: 0
+**     Date/Time   : 2017-02-06, 17:22, # CodeGen: 4
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
 **     Settings    :
 **     Contents    :
-**         No public methods
+**         client1_task - void client1_task(os_task_param_t task_init_data);
 **
 ** ###################################################################*/
 /*!
-** @file Events.h
+** @file client_task1.h
 ** @version 01.00
 ** @brief
 **         This is user's event module.
 **         Put your event handler code here.
 */         
 /*!
-**  @addtogroup Events_module Events module documentation
+**  @addtogroup client_task1_module client_task1 module documentation
 **  @{
 */         
 
-#ifndef __Events_H
-#define __Events_H
-/* MODULE Events */
+#ifndef __client_task1_H
+#define __client_task1_H
+/* MODULE client_task1 */
 
 #include "fsl_device_registers.h"
 #include "clockMan1.h"
@@ -44,32 +44,31 @@
 #include "client1.h"
 #include "client2.h"
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
-
 /*
 ** ===================================================================
-**     Callback    : myUART_RxCallback
-**     Description : This callback occurs when data are received.
+**     Callback    : client1_task
+**     Description : Task function entry.
 **     Parameters  :
-**       instance - The UART instance number.
-**       uartState - A pointer to the UART driver state structure
-**       memory.
+**       task_init_data - OS task parameter
 **     Returns : Nothing
 ** ===================================================================
 */
-void myUART_RxCallback(uint32_t instance, void * uartState);
+void client1_task(os_task_param_t task_init_data);
 
-/* END Events */
+
+/* END client_task1 */
 
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif 
 
 #endif 
-/* ifndef __Events_H*/
+/* ifndef __client_task1_H*/
 /*!
 ** @}
 */

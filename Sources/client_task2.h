@@ -1,34 +1,34 @@
 /* ###################################################################
-**     Filename    : Events.h
+**     Filename    : client_task2.h
 **     Project     : serial_echo
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-30, 16:02, # CodeGen: 0
+**     Date/Time   : 2017-02-06, 17:24, # CodeGen: 5
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
 **     Settings    :
 **     Contents    :
-**         No public methods
+**         client2_task - void client2_task(os_task_param_t task_init_data);
 **
 ** ###################################################################*/
 /*!
-** @file Events.h
+** @file client_task2.h
 ** @version 01.00
 ** @brief
 **         This is user's event module.
 **         Put your event handler code here.
 */         
 /*!
-**  @addtogroup Events_module Events module documentation
+**  @addtogroup client_task2_module client_task2 module documentation
 **  @{
 */         
 
-#ifndef __Events_H
-#define __Events_H
-/* MODULE Events */
+#ifndef __client_task2_H
+#define __client_task2_H
+/* MODULE client_task2 */
 
 #include "fsl_device_registers.h"
 #include "clockMan1.h"
@@ -48,28 +48,26 @@
 extern "C" {
 #endif 
 
-
 /*
 ** ===================================================================
-**     Callback    : myUART_RxCallback
-**     Description : This callback occurs when data are received.
+**     Callback    : client2_task
+**     Description : Task function entry.
 **     Parameters  :
-**       instance - The UART instance number.
-**       uartState - A pointer to the UART driver state structure
-**       memory.
+**       task_init_data - OS task parameter
 **     Returns : Nothing
 ** ===================================================================
 */
-void myUART_RxCallback(uint32_t instance, void * uartState);
+void client2_task(os_task_param_t task_init_data);
 
-/* END Events */
+
+/* END client_task2 */
 
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif 
 
 #endif 
-/* ifndef __Events_H*/
+/* ifndef __client_task2_H*/
 /*!
 ** @}
 */

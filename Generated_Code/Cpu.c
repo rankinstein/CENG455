@@ -8,7 +8,7 @@
 **     Repository  : KSDK 1.3.0
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-30, 16:14, # CodeGen: 1
+**     Date/Time   : 2017-02-06, 17:24, # CodeGen: 5
 **     Abstract    :
 **
 **     Settings    :
@@ -69,6 +69,8 @@
 #include "Events.h"
 #include "rtos_main_task.h"
 #include "os_tasks.h"
+#include "client_task1.h"
+#include "client_task2.h"
 
 
 #ifdef __cplusplus
@@ -118,6 +120,12 @@ void Components_Init(void)
   UART_DRV_InstallRxCallback(myUART_IDX, myUART_RxCallback, myRxBuff, NULL, true);
   /*! myUART Auto initialization end */
     
+  /*! client1 Auto initialization start */ 
+  (void)client1_Init();
+  /*! client1 Auto initialization end */                       
+  /*! client2 Auto initialization start */ 
+  (void)client2_Init();
+  /*! client2 Auto initialization end */                       
 }
 #endif /* CPU_COMPONENTS_INIT */
 

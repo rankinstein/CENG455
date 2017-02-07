@@ -41,10 +41,45 @@
 #include "MainTask.h"
 #include "serialTask.h"
 #include "myUART.h"
+#include "client1.h"
+#include "client2.h"
+
+#include <message.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
+
+/*
+ * queue id's
+ */
+#define HANDLER_QUEUE	8
+#define ISR_QUEUE		9
+#define CLIENT1_QUEUE	10
+#define CLIENT2_QUEUE	11
+
+/*
+ * end of queue id's
+ */
+
+/*
+ * max # of waiting messages
+ */
+#define NUM_HANDLER_MESSAGES	(10)
+/*
+ * end max # of waiting messages
+ */
+/*
+ * structures
+ */
+typedef struct handler_message
+{
+	MESSAGE_HEADER_STRUCT HEADER;
+	unsigned char DATA[256];
+} HANDLER_MESSAGE, * HANDLER_MESSAGE_PTR;
+/*
+ * end of structures
+ */
 
 /*
 ** ===================================================================
@@ -57,6 +92,7 @@ extern "C" {
 */
 void serial_task(os_task_param_t task_init_data);
 
+extern _pool_id message_pool;
 
 /* END os_tasks */
 

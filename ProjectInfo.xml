@@ -255,7 +255,6 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\rtos\mqx\mqx_stdlib\source\stdio\stdio.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\rtos\mqx\mqx_stdlib\source\strings\strings.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\Events.c</PathName>
-      <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task1.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task2.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\main.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\master_task.c</PathName>
@@ -409,7 +408,6 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\rtos\mqx\mqx_stdlib\source\stdio\print_prv.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\rtos\mqx\mqx_stdlib\source\stdio\scan_prv.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\Events.h</PathName>
-      <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task1.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task2.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\master_task.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\rtos_main_task.h</PathName>

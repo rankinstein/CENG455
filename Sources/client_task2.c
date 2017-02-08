@@ -93,6 +93,17 @@ void client2_task(os_task_param_t task_init_data)
 	handler = OpenW();
 	printf("\nTEST 8 - After closing can open write access: %s", handler ? "PASS":"FAIL");
 
+	/* incomplete - testing _putline() */
+	char message[8];
+	message[0] = 't';
+	message[1] = 'e';
+	message[2] = 's';
+	message[3] = 't';
+	message[4] = '\0';
+	bool put_response = _putline(handler, &message);
+	printf("\nput response: %d\n", put_response);
+	/* end of incomplete */
+
 #ifdef PEX_USE_RTOS
   while (1) {
 #endif

@@ -74,13 +74,14 @@ extern "C" {
  */
 #define NUM_HANDLER_MESSAGES	(10)
 
+#define HANDLER_MESSAGE_SIZE 256
 /*
  * structures
  */
 typedef struct handler_message
 {
 	MESSAGE_HEADER_STRUCT HEADER;
-	unsigned char DATA[256];
+	unsigned char DATA[HANDLER_MESSAGE_SIZE];
 } HANDLER_MESSAGE, * HANDLER_MESSAGE_PTR;
 
 typedef struct device
@@ -105,6 +106,7 @@ MUTEX_STRUCT write_access_mutex;
 extern _pool_id message_pool;
 extern bool OpenR(_mqx_uint stream_no);
 extern _queue_id OpenW();
+extern bool _putline(_queue_id, char*);
 extern bool Close();
 
 /*

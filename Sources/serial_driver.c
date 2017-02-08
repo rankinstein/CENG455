@@ -123,8 +123,8 @@ _queue_id OpenW() {
 }
 
 
-/* INPROGRESS */
-bool _putline(_queue_id qid, char* message) {
+/* INPROGRESS need to verify the insertion of the message DATA*/
+bool _putline(_queue_id qid, char* message_ptr) {
 	/* task must have write permission */
 	if(_mutex_lock(&write_access_mutex) != MQX_OK) {
 		printf("\nError when trying to obtain write access mutex.\n");
@@ -142,15 +142,23 @@ bool _putline(_queue_id qid, char* message) {
 		_mutex_unlock(&write_access_mutex);
 		return FALSE;
 	}
-/* TODO
+
 	handler_ptr->HEADER.SOURCE_QID = UNKNOWN_QUEUE;
 	handler_ptr->HEADER.TARGET_QID = _msgq_get_id(0, HANDLER_QUEUE);
-	handler_ptr->HEADER.SIZE = sizeof(MESSAGE_HEADER_STRUCT) + strlen((char *)handler_ptr->DATA) + 1;
+	handler_ptr->HEADER.SIZE = sizeof(MESSAGE_HEADER_STRUCT) + sizeof(char) * HANDLER_MESSAGE_SIZE;
 	_mqx_uint i;
-	for (i=0; i < strlen(message); i++) {
-		handler_ptr->DATA[i] = myRxBuff[i];
+	for (i=0; i < strlen(message_ptr); i++) {
+		handler_ptr->DATA[i] = message_ptr[i];
 	}
-*/
+	message_ptr[i] = '\n';
+	message_ptr[i+1] = '\0';
+
+	bool result = _msgq_send(handler_ptr);
+	if (result != TRUE) {
+		_mutex_unlock(&write_access_mutex);
+		return FALSE;
+	}
+
 	_mutex_unlock(&write_access_mutex);
 	return TRUE;
 }
@@ -286,8 +294,9 @@ void serial_driver(os_task_param_t task_init_data)
 				handle_char(handler_ptr->DATA[0]);
 				/* switch statement for handling individual messages */
 			} else {
-				printf("\nGot a message not from the ISR.\n");
-				printf("%d\n", handler_ptr->HEADER.SOURCE_QID);
+				//printf("\nGot a message not from the ISR.\n");
+				//printf("%d\n", handler_ptr->HEADER.SOURCE_QID);
+				printf("%s\n", handler_ptr->DATA);
 				/* switch statement for handling individual messages */
 			}
 

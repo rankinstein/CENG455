@@ -122,6 +122,39 @@ _queue_id OpenW() {
 	return (_queue_id) 0;
 }
 
+
+/* INPROGRESS */
+bool _putline(_queue_id qid, char* message) {
+	/* task must have write permission */
+	if(_mutex_lock(&write_access_mutex) != MQX_OK) {
+		printf("\nError when trying to obtain write access mutex.\n");
+		return FALSE;
+	}
+	_task_id client_id = _task_get_id();
+	if(open_write != client_id) {
+		_mutex_unlock(&write_access_mutex);
+		return FALSE;
+	}
+
+	HANDLER_MESSAGE_PTR handler_ptr = (HANDLER_MESSAGE_PTR)_msg_alloc(message_pool);
+
+	if (handler_ptr == NULL) {
+		_mutex_unlock(&write_access_mutex);
+		return FALSE;
+	}
+/* TODO
+	handler_ptr->HEADER.SOURCE_QID = UNKNOWN_QUEUE;
+	handler_ptr->HEADER.TARGET_QID = _msgq_get_id(0, HANDLER_QUEUE);
+	handler_ptr->HEADER.SIZE = sizeof(MESSAGE_HEADER_STRUCT) + strlen((char *)handler_ptr->DATA) + 1;
+	_mqx_uint i;
+	for (i=0; i < strlen(message); i++) {
+		handler_ptr->DATA[i] = myRxBuff[i];
+	}
+*/
+	_mutex_unlock(&write_access_mutex);
+	return TRUE;
+}
+
 /* Close - Remove write and/or read access from a task */
 bool Close() {
 	/* Check and revoke write access */

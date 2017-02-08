@@ -53,6 +53,7 @@ extern "C" {
 /*
  * queue numbers's
  */
+#define UNKNOWN_QUEUE   7 // used when the message source is unkown
 #define HANDLER_QUEUE	8
 #define ISR_QUEUE		9
 #define CLIENT1_QUEUE	10

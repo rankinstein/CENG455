@@ -53,26 +53,27 @@ extern "C" {
 #endif 
 
 /*
- * queue id's
+ * queue numbers's
  */
 #define HANDLER_QUEUE	8
 #define ISR_QUEUE		9
 #define CLIENT1_QUEUE	10
 #define CLIENT2_QUEUE	11
+/*
+ * end of queue numbers's
+ */
 
 /*
- * end of queue id's
+ * max number of clients who can open read or write access
+ * This value must be greater than or equal to the largest queue number
+ * of the tasks that request read access
  */
+#define MAX_DEVICES			20
 
 /*
  * max # of waiting messages
  */
 #define NUM_HANDLER_MESSAGES	(10)
-
-/*
- * max # of clients who can open read or write access
- */
-#define MAX_DEVICES			20
 
 /*
  * structures
@@ -96,7 +97,8 @@ typedef struct device
 /*
  * mutexes
  */
-MUTEX_STRUCT device_mutex;
+MUTEX_STRUCT read_access_mutex;
+MUTEX_STRUCT write_access_mutex;
 /*
  * end of mutexes
  */
@@ -114,6 +116,8 @@ void serial_task(os_task_param_t task_init_data);
 
 extern _pool_id message_pool;
 extern bool OpenR(_mqx_uint stream_no);
+extern _queue_id OpenW();
+extern bool Close();
 
 /* END os_tasks */
 

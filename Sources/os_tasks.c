@@ -38,13 +38,22 @@
 extern "C" {
 #endif 
 
+/* User includes (#include below this line is not maintained by Processor Expert) */
+
 /* declaration of global message pool */
 _pool_id	message_pool;
 
-/* declaration of devices list */
-DEVICE_STRUCT opened_devices[MAX_DEVICES];
+/* declaration of the reading tasks list */
+DEVICE_STRUCT open_read[MAX_DEVICES];
 
-/* User includes (#include below this line is not maintained by Processor Expert) */
+/* declaration of the writing task */
+_task_id open_write = MQX_NULL_TASK_ID;
+
+/* handler's queue id */
+_queue_id	handler_qid;
+
+
+
 
 /*
  * Public serial access functions: OpenR, _readline, OpenW, _putline, Close
@@ -53,44 +62,98 @@ DEVICE_STRUCT opened_devices[MAX_DEVICES];
 /* OpenR - Allow read access for a client */
 bool OpenR(_mqx_uint stream_no) {
 	/* obtain device_mutex */
-	if(_mutex_lock(&device_mutex) != MQX_OK) {
+	if(_mutex_lock(&read_access_mutex) != MQX_OK) {
 		printf("\nError when trying to obtain device_mutex.\n");
 		return FALSE;
 	}
 
-	/* check if the device has already requested read access */
-	if(opened_devices[stream_no].client_id == 0) {
+	/* get client task id from client_qid */
+	_task_id client_task = _task_get_id();
+
+	/* Check if task already has read access */
+	for(int i = 0; i < MAX_DEVICES; i++) {
+		if(open_read[i].client_id == client_task) {
+			_mutex_unlock(&read_access_mutex);
+			return FALSE;
+		}
+	}
+
+	/* if the stream_no has not been given read access assign it */
+	if(open_read[stream_no].client_id == 0) {
 
 		/* get queue id from client queue number (stream_no) */
 		_queue_id client_qid = _msgq_get_id(0, stream_no);
 		if(client_qid == MSGQ_NULL_QUEUE_ID) {
 			printf("\nError getting client queue id from queue number.\n");
-			_mutex_unlock(&device_mutex);
+			_mutex_unlock(&read_access_mutex);
 			return FALSE;
 		}
 
-		/* get client task id from client_qid */
-		_task_id client_task = _msgq_get_owner(client_qid);
-		if(client_task == MQX_NULL_TASK_ID) {
-			printf("\nError getting client task id from queue id.\n");
-			_mutex_unlock(&device_mutex);
-			return FALSE;
-		}
-
-		opened_devices[stream_no] = (DEVICE_STRUCT) {
+		open_read[stream_no] = (DEVICE_STRUCT) {
 			.client_id = client_task,
 			.client_qid = client_qid,
 			.read_access = TRUE };
-	} else {
-		_mutex_unlock(&device_mutex);
+
+		_mutex_unlock(&read_access_mutex);
+		//printf("device %d opened: %d, %d, %d\n", stream_no, open_read[stream_no].client_id, open_read[stream_no].client_qid, open_read[stream_no].read_access);
+		return TRUE;
+	}
+	/* otherwise the device already has read access so return FALSE */
+	else {
+		_mutex_unlock(&read_access_mutex);
 		return FALSE;
 	}
+}
 
-	/* release device_mutex */
-	_mutex_unlock(&device_mutex);
+/* OpenW - Request write access */
+_queue_id OpenW() {
+	/* obtain write access mutex */
+	if(_mutex_lock(&write_access_mutex) != MQX_OK) {
+		printf("\nError when trying to obtain write access mutex.\n");
+		return (_queue_id) 0;
+	}
+	if(open_write == MQX_NULL_TASK_ID) {
+		open_write = _task_get_id();
+		_mutex_unlock(&write_access_mutex);
+		return handler_qid;
+	}
+	_mutex_unlock(&write_access_mutex);
+	return (_queue_id) 0;
+}
 
-	printf("device %d opened: %d, %d, %d\n", stream_no, opened_devices[stream_no].client_id, opened_devices[stream_no].client_qid, opened_devices[stream_no].read_access);
-	return TRUE;
+/* Close - Remove write and/or read access from a task */
+bool Close() {
+	/* Check and revoke write access */
+	bool write_revoked = FALSE;
+	/* obtain write access mutex */
+	if(_mutex_lock(&write_access_mutex) != MQX_OK) {
+		printf("\nError when trying to obtain write access mutex.\n");
+		return FALSE;
+	}
+	if(open_write == _task_get_id()) {
+		open_write = MQX_NULL_TASK_ID;
+		write_revoked = TRUE;
+	}
+	_mutex_unlock(&write_access_mutex);
+
+	/* Check and revoke read access */
+	bool read_revoked = FALSE;
+	/* obtain read access mutex */
+	if(_mutex_lock(&read_access_mutex) != MQX_OK) {
+		printf("\nError when trying to obtain read access mutex.\n");
+		return FALSE;
+	}
+	/* check read access list for the task id */
+	for(int i = 0; i < MAX_DEVICES; i++) {
+		if(open_read[i].client_id == _task_get_id()) {
+			open_read[i] = (DEVICE_STRUCT) {0,0,0};
+			read_revoked = TRUE;
+			break;
+		}
+	}
+	_mutex_unlock(&read_access_mutex);
+
+	return write_revoked || read_revoked;
 }
 
 /*
@@ -131,7 +194,7 @@ void serial_task(os_task_param_t task_init_data)
 
 	HANDLER_MESSAGE_PTR handler_ptr;
 	_mqx_uint	i;
-	_queue_id	handler_qid;
+
 	bool		result;
 
 	/* open a message queue */
@@ -152,15 +215,34 @@ void serial_task(os_task_param_t task_init_data)
 
 	/* initialize opened_devices */
 	for(i = 0; i < MAX_DEVICES; i++) {
-		opened_devices[i] = (DEVICE_STRUCT) {0,0,0};
+		open_read[i] = (DEVICE_STRUCT) {0,0,0};
 	}
 
-	/* initialize device_mutex */
-	if(_mutex_init(&device_mutex, NULL) != MQX_OK){
-		printf("\nCould not create device list mutex.\n");
+	/* initialize read_access_mutex */
+	MUTEX_ATTR_STRUCT read_mutexattr;
+	if(_mutatr_init(&read_mutexattr) != MQX_OK) {
+		printf("\nCould not initialize read mutex attributes.\n");
+		_task_block();
+	}
+	if(_mutex_init(&read_access_mutex, &read_mutexattr) != MQX_OK){
+		printf("\nCould not create read access mutex.\n");
 		_task_block();
 	}
 
+	/* initialize write_access_mutex */
+	MUTEX_ATTR_STRUCT write_mutexattr;
+		if(_mutatr_init(&write_mutexattr) != MQX_OK) {
+			printf("\nCould not initialize write mutex attributes.\n");
+			_task_block();
+		}
+		if(_mutex_init(&write_access_mutex, &write_mutexattr) != MQX_OK){
+			printf("\nCould not create write access mutex.\n");
+			_task_block();
+		}
+
+	/*
+	 * Handler consume message loop
+	 */
 	while (TRUE) {
 		handler_ptr = _msgq_receive(handler_qid, 0);
 
@@ -168,8 +250,6 @@ void serial_task(os_task_param_t task_init_data)
 			printf("\nCould not receive a message\n");
 			_task_block();
 		}
-
-		_time_delay_ticks(1);
 
 		if (handler_ptr->HEADER.SOURCE_QID == ISR_QUEUE) {
 			handle_char(handler_ptr->DATA[0]);
@@ -182,8 +262,11 @@ void serial_task(os_task_param_t task_init_data)
 
 		_msg_free(handler_ptr);
 	}
+	/*
+	 * end of consume message loop
+	 */
 
-	char buf[13];
+	unsigned char buf[13];
 	sprintf(buf, "\n\rType here: ");
 	UART_DRV_SendDataBlocking(myUART_IDX, buf, sizeof(buf), 1000);
 

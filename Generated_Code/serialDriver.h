@@ -7,7 +7,7 @@
 **     Version     : Component 1.3.0, Driver 01.00, CPU db: 3.00.000
 **     Repository  : KSDK 1.3.0
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-08, 11:22, # CodeGen: 8
+**     Date/Time   : 2017-02-08, 11:56, # CodeGen: 12
 **     Contents    :
 **         Init - osa_status_t serialDriver_Init(void);
 **
@@ -66,7 +66,7 @@
 /* serialDriver task stack size */  
 #define SERIALDRIVER_TASK_STACK_SIZE   1024U
 /* serialDriver task priority value */  
-#define SERIALDRIVER_TASK_PRIORITY     16U
+#define SERIALDRIVER_TASK_PRIORITY     10U
 /*
 ** ===================================================================
 **     Method      :  Init (component OS_Task)

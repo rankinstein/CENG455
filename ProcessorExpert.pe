@@ -3,7 +3,7 @@
   <Header>
     <Name>serial_echo</Name>
     <SavedBy>jonah</SavedBy>
-    <ModificationStamp>6</ModificationStamp>
+    <ModificationStamp>10</ModificationStamp>
     <Date>2017-01-30</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -33175,7 +33175,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>16</Value>
+        <Value>10</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -33249,8 +33249,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>LinkItem</ItemSymbol>
@@ -35545,7 +35545,7 @@
     <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
     <ComponentUUID>com.freescale.processorexpert.os_task</ComponentUUID>
     <BeanType>OS_Task</BeanType>
-    <Name>client1</Name>
+    <Name>master</Name>
     <CompNumb>40</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
@@ -35560,7 +35560,7 @@
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>client1</Value>
+        <Value>master</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CompVersion</ItemSymbol>
@@ -35580,7 +35580,7 @@
         <ItemSymbol>TaskEntryFunction</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>client1_task</Value>
+        <Value>master_task</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>IsPriorityInitialized</ItemSymbol>
@@ -35754,7 +35754,7 @@
         <ItemSymbol>EventModule</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>client_task1</Value>
+        <Value>master_task</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>TaskCode</ItemSymbol>
@@ -35828,7 +35828,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>16</Value>
+        <Value>17</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>

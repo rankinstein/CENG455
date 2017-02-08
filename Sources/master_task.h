@@ -1,34 +1,34 @@
 /* ###################################################################
-**     Filename    : client_task1.h
+**     Filename    : master_task.h
 **     Project     : serial_echo
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-06, 17:22, # CodeGen: 4
+**     Date/Time   : 2017-02-08, 11:39, # CodeGen: 9
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
 **     Settings    :
 **     Contents    :
-**         client1_task - void client1_task(os_task_param_t task_init_data);
+**         master_task - void master_task(os_task_param_t task_init_data);
 **
 ** ###################################################################*/
 /*!
-** @file client_task1.h
+** @file master_task.h
 ** @version 01.00
 ** @brief
 **         This is user's event module.
 **         Put your event handler code here.
 */         
 /*!
-**  @addtogroup client_task1_module client_task1 module documentation
+**  @addtogroup master_task_module master_task module documentation
 **  @{
 */         
 
-#ifndef __client_task1_H
-#define __client_task1_H
-/* MODULE client_task1 */
+#ifndef __master_task_H
+#define __master_task_H
+/* MODULE master_task */
 
 #include "fsl_device_registers.h"
 #include "clockMan1.h"
@@ -41,9 +41,8 @@
 #include "MainTask.h"
 #include "serialDriver.h"
 #include "myUART.h"
-#include "client1.h"
+#include "master.h"
 #include "client2.h"
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,24 +50,24 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Callback    : client1_task
+**     Callback    : master_task
 **     Description : Task function entry.
 **     Parameters  :
 **       task_init_data - OS task parameter
 **     Returns : Nothing
 ** ===================================================================
 */
-void client1_task(os_task_param_t task_init_data);
+void master_task(os_task_param_t task_init_data);
 
 
-/* END client_task1 */
+/* END master_task */
 
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif 
 
 #endif 
-/* ifndef __client_task1_H*/
+/* ifndef __master_task_H*/
 /*!
 ** @}
 */

@@ -41,7 +41,7 @@
 #include "MainTask.h"
 #include "serialDriver.h"
 #include "myUART.h"
-#include "client1.h"
+#include "master.h"
 #include "client2.h"
 
 #ifdef __cplusplus

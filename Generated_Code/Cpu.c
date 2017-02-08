@@ -8,7 +8,7 @@
 **     Repository  : KSDK 1.3.0
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-08, 11:22, # CodeGen: 8
+**     Date/Time   : 2017-02-08, 11:45, # CodeGen: 10
 **     Abstract    :
 **
 **     Settings    :
@@ -69,7 +69,7 @@
 #include "Events.h"
 #include "rtos_main_task.h"
 #include "serial_driver.h"
-#include "client_task1.h"
+#include "master_task.h"
 #include "client_task2.h"
 
 
@@ -111,18 +111,15 @@ void Common_Init(void)
 void Components_Init(void)
 {
 
-  /*! serialDriver Auto initialization start */ 
-  (void)serialDriver_Init();
-  /*! serialDriver Auto initialization end */                       
   /*! myUART Auto initialization start */
   OSA_InstallIntHandler(UART3_RX_TX_IRQn, myUART_IRQHandler);
   UART_DRV_Init(myUART_IDX,&myUART_State,&myUART_InitConfig0);
   UART_DRV_InstallRxCallback(myUART_IDX, myUART_RxCallback, myRxBuff, NULL, true);
   /*! myUART Auto initialization end */
     
-  /*! client1 Auto initialization start */ 
-  (void)client1_Init();
-  /*! client1 Auto initialization end */                       
+  /*! master Auto initialization start */ 
+  (void)master_Init();
+  /*! master Auto initialization end */                       
   /*! client2 Auto initialization start */ 
   (void)client2_Init();
   /*! client2 Auto initialization end */                       

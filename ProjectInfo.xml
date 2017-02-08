@@ -114,12 +114,12 @@
     <GeneratedCs>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\Cpu.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\MainTask.c</PathName>
-      <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\client1.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\client2.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\clockMan1.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\fsl_hwtimer1.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\fsl_mpu1.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\hardware_init.c</PathName>
+      <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\master.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\mqx_ksdk.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\myUART.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\osa1.c</PathName>
@@ -258,7 +258,7 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task1.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task2.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\main.c</PathName>
-      <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\os_tasks.c</PathName>
+      <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\master_task.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\rtos_main_task.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\serial_driver.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Static_Code\System\PE_low_level_init.c</PathName>
@@ -271,11 +271,11 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\SDK\rtos\mqx\config\board\user_config.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\SDK\rtos\mqx\config\mcu\mqx_sdk_config.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\board.h</PathName>
-      <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\client1.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\client2.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\clockMan1.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\fsl_hwtimer1.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\fsl_mpu1.h</PathName>
+      <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\master.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\mqx_ksdk.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\myUART.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\osa1.h</PathName>
@@ -411,7 +411,7 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\Events.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task1.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task2.h</PathName>
-      <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\os_tasks.h</PathName>
+      <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\master_task.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\rtos_main_task.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\serial_driver.h</PathName>
     </GeneratedHs>

@@ -287,8 +287,8 @@ Module "myUART"    (component fsl_uart)
    - myUART_UART_DRV_GetReceiveStatus -Returns whether the previous UART receive is complete.
    - myUART_UART_DRV_AbortReceivingData -Terminates an asynchronous UART receive early.
 
-Module "client1"   (component OS_Task)
-   - client1_Init -Creates and starts a task.
+Module "master"    (component OS_Task)
+   - master_Init -Creates and starts a task.
 
 Module "client2"   (component OS_Task)
    - client2_Init -Creates and starts a task.

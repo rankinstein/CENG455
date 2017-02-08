@@ -32,7 +32,7 @@
 #include "Events.h"
 #include "rtos_main_task.h"
 #include "serial_driver.h"
-#include "client_task1.h"
+#include "master_task.h"
 #include "client_task2.h"
 #include "clockMan1.h"
 #include "pin_init.h"
@@ -44,7 +44,7 @@
 #include "MainTask.h"
 #include "serialDriver.h"
 #include "myUART.h"
-#include "client1.h"
+#include "master.h"
 #include "client2.h"
 #if CPU_INIT_CONFIG
   #include "Init_Config.h"

@@ -7,7 +7,7 @@
 **     Version     : Component 1.3.0, Driver 01.00, CPU db: 3.00.000
 **     Repository  : KSDK 1.3.0
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-06, 17:24, # CodeGen: 5
+**     Date/Time   : 2017-02-08, 11:50, # CodeGen: 11
 **     Contents    :
 **         Init - osa_status_t client2_Init(void);
 **
@@ -66,7 +66,7 @@
 /* client2 task stack size */  
 #define CLIENT2_TASK_STACK_SIZE        1024U
 /* client2 task priority value */  
-#define CLIENT2_TASK_PRIORITY          16U
+#define CLIENT2_TASK_PRIORITY          17U
 /*
 ** ===================================================================
 **     Method      :  Init (component OS_Task)

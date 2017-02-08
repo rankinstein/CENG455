@@ -7,7 +7,7 @@
 **     Version     : Component 1.2.0, Driver 01.00, CPU db: 3.00.000
 **     Repository  : KSDK 1.3.0
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-08, 11:22, # CodeGen: 8
+**     Date/Time   : 2017-02-08, 11:39, # CodeGen: 9
 **     Contents    :
 **         _int_default_isr                - void _int_default_isr(void * vector_number);
 **         _int_disable                    - void _int_disable();
@@ -357,7 +357,7 @@ typedef task_param_t os_task_param_t;
 /* MQX task IDs */
 #define MAINTASK_TASK        1U
 #define SERIALDRIVER_TASK    2U
-#define CLIENT1_TASK         3U
+#define MASTER_TASK          3U
 #define CLIENT2_TASK         4U
 
 extern const MQX_INITIALIZATION_STRUCT MQX_init_struct;

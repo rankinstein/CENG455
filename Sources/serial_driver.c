@@ -31,7 +31,7 @@
 #include "Events.h"
 #include "rtos_main_task.h"
 #include "serial_driver.h"
-#include "client_task1.h"
+#include "master_task.h"
 #include "client_task2.h"
 
 #ifdef __cplusplus

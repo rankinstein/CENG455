@@ -2396,21 +2396,21 @@
         <NotCreatedByDefault>false</NotCreatedByDefault>
       </SynchronizedStaticFile>
       <GenEventModules lines_count="5">
-        <Line>client_task1</Line>
         <Line>client_task2</Line>
         <Line>Events</Line>
+        <Line>master_task</Line>
         <Line>rtos_main_task</Line>
         <Line>serial_driver</Line>
       </GenEventModules>
-      <GenMethodsInclient_task1 lines_count="1">
-        <Line>client1_task</Line>
-      </GenMethodsInclient_task1>
       <GenMethodsInclient_task2 lines_count="1">
         <Line>client2_task</Line>
       </GenMethodsInclient_task2>
       <GenMethodsInEvents lines_count="1">
         <Line>myUART_RxCallback</Line>
       </GenMethodsInEvents>
+      <GenMethodsInmaster_task lines_count="1">
+        <Line>master_task</Line>
+      </GenMethodsInmaster_task>
       <GenMethodsInrtos_main_task lines_count="1">
         <Line>main_task</Line>
       </GenMethodsInrtos_main_task>
@@ -2418,9 +2418,7 @@
         <Line>serial_driver</Line>
       </GenMethodsInserial_driver>
       <GenAllModules lines_count="18">
-        <Line>client_task1</Line>
         <Line>client_task2</Line>
-        <Line>client1</Line>
         <Line>client2</Line>
         <Line>clockMan1</Line>
         <Line>Cpu</Line>
@@ -2428,6 +2426,8 @@
         <Line>fsl_hwtimer1</Line>
         <Line>fsl_mpu1</Line>
         <Line>MainTask</Line>
+        <Line>master</Line>
+        <Line>master_task</Line>
         <Line>mqx_ksdk</Line>
         <Line>myUART</Line>
         <Line>osa1</Line>
@@ -2449,13 +2449,13 @@
         <Line>MainTask</Line>
         <Line>serialDriver</Line>
         <Line>myUART</Line>
-        <Line>client1</Line>
+        <Line>master</Line>
         <Line>client2</Line>
       </GenBeanModules>
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>6</ProjectModificationStamp>
+    <ProjectModificationStamp>10</ProjectModificationStamp>
   </Options>
   <CpuID_1>
     <Generated>true</Generated>
@@ -2464,7 +2464,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1246252183</HeaderAge>
-    <CodeAge>1246255840</CodeAge>
+    <CodeAge>1246256561</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>2</GenNumMethods>
     <SystemInit>true</SystemInit>
@@ -3424,8 +3424,8 @@
       <GenComponentVersion>1.2.0</GenComponentVersion>
       <GenDriverVersion>01.00</GenDriverVersion>
       <GenEventModule />
-      <HeaderAge>1246255840</HeaderAge>
-      <CodeAge>1246255840</CodeAge>
+      <HeaderAge>1246256367</HeaderAge>
+      <CodeAge>1246256367</CodeAge>
       <AsemblAge>-1</AsemblAge>
       <GenNumMethods>287</GenNumMethods>
       <_int_default_isr>true</_int_default_isr>
@@ -4235,7 +4235,7 @@
     <GenComponentVersion>1.3.0</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>serial_driver</GenEventModule>
-    <HeaderAge>1246255840</HeaderAge>
+    <HeaderAge>1246256924</HeaderAge>
     <CodeAge>1246255840</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>3</GenNumMethods>
@@ -4427,12 +4427,12 @@
   </ComponentID_26>
   <ComponentID_40>
     <Generated>true</Generated>
-    <GenCompName>client1</GenCompName>
+    <GenCompName>master</GenCompName>
     <GenComponentVersion>1.3.0</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
-    <GenEventModule>client_task1</GenEventModule>
-    <HeaderAge>1246252183</HeaderAge>
-    <CodeAge>1246252183</CodeAge>
+    <GenEventModule>master_task</GenEventModule>
+    <HeaderAge>1246256367</HeaderAge>
+    <CodeAge>1246256367</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>3</GenNumMethods>
     <Init>true</Init>
@@ -4440,7 +4440,7 @@
     <Deinit>false</Deinit>
     <GenNumEvents>1</GenNumEvents>
     <TaskCode_Selected>3</TaskCode_Selected>
-    <TaskCode_Name>client1_task</TaskCode_Name>
+    <TaskCode_Name>master_task</TaskCode_Name>
     <TaskCode_Priority>interrupts disabled</TaskCode_Priority>
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
@@ -4468,7 +4468,7 @@
     <GenComponentVersion>1.3.0</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>client_task2</GenEventModule>
-    <HeaderAge>1246252183</HeaderAge>
+    <HeaderAge>1246256725</HeaderAge>
     <CodeAge>1246252183</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>3</GenNumMethods>

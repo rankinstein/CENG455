@@ -2399,8 +2399,8 @@
         <Line>client_task1</Line>
         <Line>client_task2</Line>
         <Line>Events</Line>
-        <Line>os_tasks</Line>
         <Line>rtos_main_task</Line>
+        <Line>serial_driver</Line>
       </GenEventModules>
       <GenMethodsInclient_task1 lines_count="1">
         <Line>client1_task</Line>
@@ -2411,12 +2411,12 @@
       <GenMethodsInEvents lines_count="1">
         <Line>myUART_RxCallback</Line>
       </GenMethodsInEvents>
-      <GenMethodsInos_tasks lines_count="1">
-        <Line>serial_task</Line>
-      </GenMethodsInos_tasks>
       <GenMethodsInrtos_main_task lines_count="1">
         <Line>main_task</Line>
       </GenMethodsInrtos_main_task>
+      <GenMethodsInserial_driver lines_count="1">
+        <Line>serial_driver</Line>
+      </GenMethodsInserial_driver>
       <GenAllModules lines_count="18">
         <Line>client_task1</Line>
         <Line>client_task2</Line>
@@ -2430,11 +2430,11 @@
         <Line>MainTask</Line>
         <Line>mqx_ksdk</Line>
         <Line>myUART</Line>
-        <Line>os_tasks</Line>
         <Line>osa1</Line>
         <Line>pin_init</Line>
         <Line>rtos_main_task</Line>
-        <Line>serialTask</Line>
+        <Line>serial_driver</Line>
+        <Line>serialDriver</Line>
         <Line>uart1</Line>
       </GenAllModules>
       <GenExternModules lines_count="0" />
@@ -2447,7 +2447,7 @@
         <Line>fsl_mpu1</Line>
         <Line>fsl_hwtimer1</Line>
         <Line>MainTask</Line>
-        <Line>serialTask</Line>
+        <Line>serialDriver</Line>
         <Line>myUART</Line>
         <Line>client1</Line>
         <Line>client2</Line>
@@ -2455,7 +2455,7 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>5</ProjectModificationStamp>
+    <ProjectModificationStamp>6</ProjectModificationStamp>
   </Options>
   <CpuID_1>
     <Generated>true</Generated>
@@ -2464,7 +2464,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1246252183</HeaderAge>
-    <CodeAge>1246252183</CodeAge>
+    <CodeAge>1246255840</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>2</GenNumMethods>
     <SystemInit>true</SystemInit>
@@ -3424,8 +3424,8 @@
       <GenComponentVersion>1.2.0</GenComponentVersion>
       <GenDriverVersion>01.00</GenDriverVersion>
       <GenEventModule />
-      <HeaderAge>1246252183</HeaderAge>
-      <CodeAge>1246252183</CodeAge>
+      <HeaderAge>1246255840</HeaderAge>
+      <CodeAge>1246255840</CodeAge>
       <AsemblAge>-1</AsemblAge>
       <GenNumMethods>287</GenNumMethods>
       <_int_default_isr>true</_int_default_isr>
@@ -4231,12 +4231,12 @@
   </ComponentID_12>
   <ComponentID_25>
     <Generated>true</Generated>
-    <GenCompName>serialTask</GenCompName>
+    <GenCompName>serialDriver</GenCompName>
     <GenComponentVersion>1.3.0</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
-    <GenEventModule>os_tasks</GenEventModule>
-    <HeaderAge>1246252183</HeaderAge>
-    <CodeAge>1246252183</CodeAge>
+    <GenEventModule>serial_driver</GenEventModule>
+    <HeaderAge>1246255840</HeaderAge>
+    <CodeAge>1246255840</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>3</GenNumMethods>
     <Init>true</Init>
@@ -4244,7 +4244,7 @@
     <Deinit>false</Deinit>
     <GenNumEvents>1</GenNumEvents>
     <TaskCode_Selected>3</TaskCode_Selected>
-    <TaskCode_Name>serial_task</TaskCode_Name>
+    <TaskCode_Name>serial_driver</TaskCode_Name>
     <TaskCode_Priority>interrupts disabled</TaskCode_Priority>
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>

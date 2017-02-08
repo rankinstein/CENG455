@@ -124,7 +124,7 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\myUART.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\osa1.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\pin_init.c</PathName>
-      <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\serialTask.c</PathName>
+      <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\serialDriver.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\uart1.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\platform\devices\MK64F12\startup\system_MK64F12.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\platform\devices\startup.c</PathName>
@@ -260,6 +260,7 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\main.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\os_tasks.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\rtos_main_task.c</PathName>
+      <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\serial_driver.c</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Static_Code\System\PE_low_level_init.c</PathName>
     </GeneratedCs>
     <GeneratedHs>
@@ -279,7 +280,7 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\myUART.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\osa1.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\pin_init.h</PathName>
-      <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\serialTask.h</PathName>
+      <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\serialDriver.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Generated_Code\uart1.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\platform\CMSIS\Include\arm_common_tables.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\platform\CMSIS\Include\arm_const_structs.h</PathName>
@@ -412,6 +413,7 @@
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\client_task2.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\os_tasks.h</PathName>
       <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\rtos_main_task.h</PathName>
+      <PathName>C:\Users\jonah\ceng455\serial_echo\Sources\serial_driver.h</PathName>
     </GeneratedHs>
     <GeneratedASMs>
       <PathName>C:\Users\jonah\ceng455\serial_echo\SDK\platform\devices\MK64F12\startup\gcc\startup_MK64F12.S</PathName>

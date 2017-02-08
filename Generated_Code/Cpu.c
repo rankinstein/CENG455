@@ -8,7 +8,7 @@
 **     Repository  : KSDK 1.3.0
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-06, 17:24, # CodeGen: 5
+**     Date/Time   : 2017-02-08, 11:22, # CodeGen: 8
 **     Abstract    :
 **
 **     Settings    :
@@ -68,7 +68,7 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "rtos_main_task.h"
-#include "os_tasks.h"
+#include "serial_driver.h"
 #include "client_task1.h"
 #include "client_task2.h"
 
@@ -111,9 +111,9 @@ void Common_Init(void)
 void Components_Init(void)
 {
 
-  /*! serialTask Auto initialization start */ 
-  (void)serialTask_Init();
-  /*! serialTask Auto initialization end */                       
+  /*! serialDriver Auto initialization start */ 
+  (void)serialDriver_Init();
+  /*! serialDriver Auto initialization end */                       
   /*! myUART Auto initialization start */
   OSA_InstallIntHandler(UART3_RX_TX_IRQn, myUART_IRQHandler);
   UART_DRV_Init(myUART_IDX,&myUART_State,&myUART_InitConfig0);

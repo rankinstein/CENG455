@@ -30,7 +30,7 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "rtos_main_task.h"
-#include "os_tasks.h"
+#include "serial_driver.h"
 #include "client_task1.h"
 #include "client_task2.h"
 

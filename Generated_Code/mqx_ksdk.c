@@ -7,7 +7,7 @@
 **     Version     : Component 1.2.0, Driver 01.00, CPU db: 3.00.000
 **     Repository  : KSDK 1.3.0
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-06, 17:24, # CodeGen: 5
+**     Date/Time   : 2017-02-08, 11:22, # CodeGen: 8
 **
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -56,11 +56,11 @@
 
 /* Application specific header file */
 #include "rtos_main_task.h"
-#include "os_tasks.h"
+#include "serial_driver.h"
 #include "client_task1.h"
 #include "client_task2.h"
 #include "MainTask.h"
-#include "serialTask.h"
+#include "serialDriver.h"
 #include "client1.h"
 #include "client2.h"
 extern void * kernel_data_prv;
@@ -86,13 +86,13 @@ const TASK_TEMPLATE_STRUCT MQX_template_list[] =
     /* Task parameter                 */  (uint32_t)(NULL),
     /* Task time slice                */  (uint32_t)(0U)
   },       
-  /* Task: serialTask */
+  /* Task: serialDriver */
   {
-    /* Task number                    */  SERIALTASK_TASK,
-    /* Entry point                    */  (TASK_FPTR)serial_task,
-    /* Stack size                     */  SERIALTASK_TASK_STACK_SIZE,
-    /* Task priority                  */  (PRIORITY_OSA_TO_RTOS(SERIALTASK_TASK_PRIORITY)),
-    /* Task name                      */  SERIALTASK_TASK_NAME,
+    /* Task number                    */  SERIALDRIVER_TASK,
+    /* Entry point                    */  (TASK_FPTR)serial_driver,
+    /* Stack size                     */  SERIALDRIVER_TASK_STACK_SIZE,
+    /* Task priority                  */  (PRIORITY_OSA_TO_RTOS(SERIALDRIVER_TASK_PRIORITY)),
+    /* Task name                      */  SERIALDRIVER_TASK_NAME,
     /* Task attributes                */  (0),
     /* Task parameter                 */  (uint32_t)(NULL),
     /* Task time slice                */  (uint32_t)(0U)

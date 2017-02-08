@@ -1,42 +1,43 @@
 /* ###################################################################
-**     Filename    : os_tasks.c
+**     Filename    : serial_driver.c
 **     Project     : serial_echo
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-30, 16:14, # CodeGen: 1
+**     Date/Time   : 2017-02-08, 11:22, # CodeGen: 8
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
 **     Settings    :
 **     Contents    :
-**         serial_task - void serial_task(os_task_param_t task_init_data);
+**         serial_driver - void serial_driver(os_task_param_t task_init_data);
 **
 ** ###################################################################*/
 /*!
-** @file os_tasks.c
+** @file serial_driver.c
 ** @version 01.00
 ** @brief
 **         This is user's event module.
 **         Put your event handler code here.
 */         
 /*!
-**  @addtogroup os_tasks_module os_tasks module documentation
+**  @addtogroup serial_driver_module serial_driver module documentation
 **  @{
 */         
-/* MODULE os_tasks */
+/* MODULE serial_driver */
 
 #include "Cpu.h"
 #include "Events.h"
 #include "rtos_main_task.h"
-#include "os_tasks.h"
+#include "serial_driver.h"
 #include "client_task1.h"
 #include "client_task2.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
+
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
@@ -175,100 +176,97 @@ void handle_char(unsigned char c) {
 	}
 }
 
-
-
 /*
 ** ===================================================================
-**     Callback    : serial_task
+**     Callback    : serial_driver
 **     Description : Task function entry.
 **     Parameters  :
 **       task_init_data - OS task parameter
 **     Returns : Nothing
 ** ===================================================================
 */
-void serial_task(os_task_param_t task_init_data)
+void serial_driver(os_task_param_t task_init_data)
 {
   /* Write your local variable definition here */
-  
 	printf("serialTask Created\n\r");
 
-	HANDLER_MESSAGE_PTR handler_ptr;
-	_mqx_uint	i;
+		HANDLER_MESSAGE_PTR handler_ptr;
+		_mqx_uint	i;
 
-	bool		result;
+		bool		result;
 
-	/* open a message queue */
-	handler_qid = _msgq_open(HANDLER_QUEUE, 0);
+		/* open a message queue */
+		handler_qid = _msgq_open(HANDLER_QUEUE, 0);
 
-	if (handler_qid == 0) {
-		printf("\nCould not open the server message queue.\n");
-		_task_block();
-	}
-
-	/* create a message pool */
-	message_pool = _msgpool_create(sizeof(HANDLER_MESSAGE), NUM_HANDLER_MESSAGES, 0, 0);
-
-	if (message_pool == MSGPOOL_NULL_POOL_ID) {
-		printf("\nCould not create a message pool\n");
-		_task_block();
-	}
-
-	/* initialize opened_devices */
-	for(i = 0; i < MAX_DEVICES; i++) {
-		open_read[i] = (DEVICE_STRUCT) {0,0,0};
-	}
-
-	/* initialize read_access_mutex */
-	MUTEX_ATTR_STRUCT read_mutexattr;
-	if(_mutatr_init(&read_mutexattr) != MQX_OK) {
-		printf("\nCould not initialize read mutex attributes.\n");
-		_task_block();
-	}
-	if(_mutex_init(&read_access_mutex, &read_mutexattr) != MQX_OK){
-		printf("\nCould not create read access mutex.\n");
-		_task_block();
-	}
-
-	/* initialize write_access_mutex */
-	MUTEX_ATTR_STRUCT write_mutexattr;
-		if(_mutatr_init(&write_mutexattr) != MQX_OK) {
-			printf("\nCould not initialize write mutex attributes.\n");
-			_task_block();
-		}
-		if(_mutex_init(&write_access_mutex, &write_mutexattr) != MQX_OK){
-			printf("\nCould not create write access mutex.\n");
+		if (handler_qid == 0) {
+			printf("\nCould not open the server message queue.\n");
 			_task_block();
 		}
 
-	/*
-	 * Handler consume message loop
-	 */
-	while (TRUE) {
-		handler_ptr = _msgq_receive(handler_qid, 0);
+		/* create a message pool */
+		message_pool = _msgpool_create(sizeof(HANDLER_MESSAGE), NUM_HANDLER_MESSAGES, 0, 0);
 
-		if (handler_ptr == NULL) {
-			printf("\nCould not receive a message\n");
+		if (message_pool == MSGPOOL_NULL_POOL_ID) {
+			printf("\nCould not create a message pool\n");
 			_task_block();
 		}
 
-		if (handler_ptr->HEADER.SOURCE_QID == ISR_QUEUE) {
-			handle_char(handler_ptr->DATA[0]);
-			/* switch statement for handling individual messages */
-		} else {
-			printf("\nGot a message not from the ISR.\n");
-			printf("%d\n", handler_ptr->HEADER.SOURCE_QID);
-			/* switch statement for handling individual messages */
+		/* initialize opened_devices */
+		for(i = 0; i < MAX_DEVICES; i++) {
+			open_read[i] = (DEVICE_STRUCT) {0,0,0};
 		}
 
-		_msg_free(handler_ptr);
-	}
-	/*
-	 * end of consume message loop
-	 */
+		/* initialize read_access_mutex */
+		MUTEX_ATTR_STRUCT read_mutexattr;
+		if(_mutatr_init(&read_mutexattr) != MQX_OK) {
+			printf("\nCould not initialize read mutex attributes.\n");
+			_task_block();
+		}
+		if(_mutex_init(&read_access_mutex, &read_mutexattr) != MQX_OK){
+			printf("\nCould not create read access mutex.\n");
+			_task_block();
+		}
 
-	unsigned char buf[13];
-	sprintf(buf, "\n\rType here: ");
-	UART_DRV_SendDataBlocking(myUART_IDX, buf, sizeof(buf), 1000);
+		/* initialize write_access_mutex */
+		MUTEX_ATTR_STRUCT write_mutexattr;
+			if(_mutatr_init(&write_mutexattr) != MQX_OK) {
+				printf("\nCould not initialize write mutex attributes.\n");
+				_task_block();
+			}
+			if(_mutex_init(&write_access_mutex, &write_mutexattr) != MQX_OK){
+				printf("\nCould not create write access mutex.\n");
+				_task_block();
+			}
+
+		/*
+		 * Handler consume message loop
+		 */
+		while (TRUE) {
+			handler_ptr = _msgq_receive(handler_qid, 0);
+
+			if (handler_ptr == NULL) {
+				printf("\nCould not receive a message\n");
+				_task_block();
+			}
+
+			if (handler_ptr->HEADER.SOURCE_QID == ISR_QUEUE) {
+				handle_char(handler_ptr->DATA[0]);
+				/* switch statement for handling individual messages */
+			} else {
+				printf("\nGot a message not from the ISR.\n");
+				printf("%d\n", handler_ptr->HEADER.SOURCE_QID);
+				/* switch statement for handling individual messages */
+			}
+
+			_msg_free(handler_ptr);
+		}
+		/*
+		 * end of consume message loop
+		 */
+
+		unsigned char buf[13];
+		sprintf(buf, "\n\rType here: ");
+		UART_DRV_SendDataBlocking(myUART_IDX, buf, sizeof(buf), 1000);
 
 #ifdef PEX_USE_RTOS
   while (1) {
@@ -286,7 +284,7 @@ void serial_task(os_task_param_t task_init_data)
 #endif    
 }
 
-/* END os_tasks */
+/* END serial_driver */
 
 #ifdef __cplusplus
 }  /* extern "C" */

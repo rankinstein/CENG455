@@ -3,7 +3,7 @@
   <Header>
     <Name>serial_echo</Name>
     <SavedBy>jonah</SavedBy>
-    <ModificationStamp>5</ModificationStamp>
+    <ModificationStamp>6</ModificationStamp>
     <Date>2017-01-30</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -33125,7 +33125,7 @@
     <Repository>file:/${ProcessorExpert_loc}/Repositories/KSDK130_Repository</Repository>
     <ComponentUUID>com.freescale.processorexpert.os_task</ComponentUUID>
     <BeanType>OS_Task</BeanType>
-    <Name>serialTask</Name>
+    <Name>serialDriver</Name>
     <CompNumb>25</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
@@ -33140,7 +33140,7 @@
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>serialTask</Value>
+        <Value>serialDriver</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CompVersion</ItemSymbol>
@@ -33160,7 +33160,7 @@
         <ItemSymbol>TaskEntryFunction</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>serial_task</Value>
+        <Value>serial_driver</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>IsPriorityInitialized</ItemSymbol>
@@ -33334,7 +33334,7 @@
         <ItemSymbol>EventModule</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>os_tasks</Value>
+        <Value>serial_driver</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>TaskCode</ItemSymbol>

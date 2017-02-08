@@ -1,34 +1,34 @@
 /* ###################################################################
-**     Filename    : os_tasks.h
+**     Filename    : serial_driver.h
 **     Project     : serial_echo
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-30, 16:14, # CodeGen: 1
+**     Date/Time   : 2017-02-08, 11:22, # CodeGen: 8
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
 **     Settings    :
 **     Contents    :
-**         serial_task - void serial_task(os_task_param_t task_init_data);
+**         serial_driver - void serial_driver(os_task_param_t task_init_data);
 **
 ** ###################################################################*/
 /*!
-** @file os_tasks.h
+** @file serial_driver.h
 ** @version 01.00
 ** @brief
 **         This is user's event module.
 **         Put your event handler code here.
 */         
 /*!
-**  @addtogroup os_tasks_module os_tasks module documentation
+**  @addtogroup serial_driver_module serial_driver module documentation
 **  @{
 */         
 
-#ifndef __os_tasks_H
-#define __os_tasks_H
-/* MODULE os_tasks */
+#ifndef __serial_driver_H
+#define __serial_driver_H
+/* MODULE serial_driver */
 
 #include "fsl_device_registers.h"
 #include "clockMan1.h"
@@ -39,19 +39,17 @@
 #include "fsl_mpu1.h"
 #include "fsl_hwtimer1.h"
 #include "MainTask.h"
-#include "serialTask.h"
+#include "serialDriver.h"
 #include "myUART.h"
 #include "client1.h"
 #include "client2.h"
-
-#include <message.h>
-#include <mutex.h>
-
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
+#include <message.h>
+#include <mutex.h>
 /*
  * queue numbers's
  */
@@ -103,30 +101,31 @@ MUTEX_STRUCT write_access_mutex;
  * end of mutexes
  */
 
+extern _pool_id message_pool;
+extern bool OpenR(_mqx_uint stream_no);
+extern _queue_id OpenW();
+extern bool Close();
+
 /*
 ** ===================================================================
-**     Callback    : serial_task
+**     Callback    : serial_driver
 **     Description : Task function entry.
 **     Parameters  :
 **       task_init_data - OS task parameter
 **     Returns : Nothing
 ** ===================================================================
 */
-void serial_task(os_task_param_t task_init_data);
+void serial_driver(os_task_param_t task_init_data);
 
-extern _pool_id message_pool;
-extern bool OpenR(_mqx_uint stream_no);
-extern _queue_id OpenW();
-extern bool Close();
 
-/* END os_tasks */
+/* END serial_driver */
 
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif 
 
 #endif 
-/* ifndef __os_tasks_H*/
+/* ifndef __serial_driver_H*/
 /*!
 ** @}
 */

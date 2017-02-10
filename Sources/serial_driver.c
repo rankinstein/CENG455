@@ -53,6 +53,11 @@ _task_id open_write = MQX_NULL_TASK_ID;
 /* handler's queue id */
 _queue_id	handler_qid;
 
+/* handler data buffer */
+char handler_buffer[HANDLER_MESSAGE_SIZE];
+/* cursor position */
+int handler_cursor_position = 0;
+
 
 
 
@@ -150,8 +155,9 @@ bool _putline(_queue_id qid, char* message_ptr) {
 	for (i=0; i < strlen(message_ptr); i++) {
 		handler_ptr->DATA[i] = message_ptr[i];
 	}
-	message_ptr[i] = '\n';
-	message_ptr[i+1] = '\0';
+	handler_ptr->DATA[i] = '\n';
+	handler_ptr->DATA[i+1] = '\r';
+	handler_ptr->DATA[i+2] = '\0';
 
 	bool result = _msgq_send(handler_ptr);
 	if (result != TRUE) {
@@ -202,18 +208,106 @@ bool Close() {
  * End of public serial access functions
  */
 
+/* Puts a char to the user terminal */
+void put_char(char c) {
+	unsigned char buf[13];
+	sprintf(buf, "\n\rType here: ");
+	UART_DRV_SendDataBlocking(myUART_IDX, buf, sizeof(buf), 1000);
+}
 
+/* Go back one character */
+void go_back_char() {
+	unsigned char char_array[4];
+	char_array[0] = '\b';
+	char_array[1] = ' ';
+	char_array[2] = '\b';
+	char_array[3] = '\0';
+	//_time_delay_ticks(1);
+	UART_DRV_SendDataBlocking(myUART_IDX, char_array, sizeof(char) * strlen(char_array), 1000);
+
+	handler_buffer[handler_cursor_position--] = '\0';
+}
+
+void send_message_to_readers() {
+	/* Check and revoke read access */
+	/* obtain read access mutex */
+	if(_mutex_lock(&read_access_mutex) != MQX_OK) {
+		printf("\nError when trying to obtain read access mutex.\n");
+		return;
+	}
+
+	_mqx_uint broadcast_ctr = 0;
+	_queue_id broadcast_to[MAX_DEVICES];
+	/* check read access list for the task id */
+	for(int i = 0; i < MAX_DEVICES; i++) {
+		if(open_read[i].client_id != 0) {
+			broadcast_to[broadcast_ctr++] = open_read[i].client_qid;
+			//create message and send
+		}
+	}
+	_mutex_unlock(&read_access_mutex);
+
+	if(broadcast_ctr == 0){
+		return;
+	}
+
+	broadcast_to[broadcast_ctr] = MSGPOOL_NULL_POOL_ID;
+
+	HANDLER_MESSAGE_PTR handler_ptr = (HANDLER_MESSAGE_PTR)_msg_alloc(message_pool);
+	handler_ptr->HEADER.SOURCE_QID = _msgq_get_id(0, HANDLER_QUEUE);
+	handler_ptr->HEADER.SIZE = sizeof(MESSAGE_HEADER_STRUCT) + sizeof(char) * HANDLER_MESSAGE_SIZE;
+	_mqx_uint i;
+	for (i=0; i < handler_cursor_position; i++) {
+		handler_ptr->DATA[i] = handler_buffer[i];
+	}
+	handler_ptr->DATA[i] = '\0';
+
+	_mqx_uint message_result = _msgq_send_broadcast(handler_ptr, broadcast_to, message_pool);
+
+	return;
+}
 
 /* Handle character input */
 void handle_char(unsigned char c) {
 	if (c==0x08) {
-		printf("got a backspace\n");
+		if (handler_cursor_position > 0) {
+			go_back_char();
+		}
 	} else if (c==0x17) {
-		printf("got a ctrl+w (back a word).\n");
+		bool seen_letter = FALSE;
+		while(handler_cursor_position > 0) {
+			if (seen_letter && handler_buffer[handler_cursor_position-1] == ' ') {
+				break;
+			}
+			if (handler_buffer[handler_cursor_position-1] != ' ') {
+				seen_letter = TRUE;
+			}
+			go_back_char();
+		}
 	} else if (c == 0x15) {
-		printf("got a ctrl+u (back a whole line).\n");
+		while(handler_cursor_position > 0) {
+			go_back_char();
+		}
+	} else if (c == 0x0d) {
+		printf("New line.\n");
+		// send to listeners
+		send_message_to_readers();
+		// output \n\r
+		unsigned char char_array[3];
+		char_array[0] = '\n';
+		char_array[1] = '\r';
+		char_array[2] = '\0';
+		UART_DRV_SendDataBlocking(myUART_IDX, char_array, sizeof(char) * strlen(char_array), 1000);
+		// reset cursor and handler buffer
+		handler_buffer[0] = '\0';
+		handler_cursor_position = 0;
 	} else {
+		handler_buffer[handler_cursor_position++] = c;
 		printf("%c", c);
+		unsigned char char_array[2];
+		char_array[0] = c;
+		char_array[1] = '\0';
+		UART_DRV_SendDataBlocking(myUART_IDX, char_array, sizeof(char) * strlen(char_array), 1000);
 	}
 }
 
@@ -297,6 +391,8 @@ void serial_driver(os_task_param_t task_init_data)
 				//printf("\nGot a message not from the ISR.\n");
 				//printf("%d\n", handler_ptr->HEADER.SOURCE_QID);
 				printf("%s\n", handler_ptr->DATA);
+				printf("%d\n", strlen(handler_ptr->DATA));
+				UART_DRV_SendDataBlocking(myUART_IDX, handler_ptr->DATA, sizeof(char) * strlen(handler_ptr->DATA), 1000);
 				/* switch statement for handling individual messages */
 			}
 

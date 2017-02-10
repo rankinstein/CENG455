@@ -76,6 +76,20 @@ void master_task(os_task_param_t task_init_data)
 		_task_block();
 	}
 
+	bool r_access = OpenR(CLIENT1_QUEUE);
+	while (TRUE) {
+		HANDLER_MESSAGE_PTR handler_ptr = _msgq_receive(master_qid, 0);
+
+		if (handler_ptr == NULL) {
+			printf("\nCould not receive a message\n");
+			_task_block();
+		}
+
+		printf("Master sees: %s\n", handler_ptr->DATA);
+
+		_msg_free(handler_ptr);
+	}
+
 
 
 #ifdef PEX_USE_RTOS

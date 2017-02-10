@@ -68,30 +68,30 @@ void client2_task(os_task_param_t task_init_data)
 		_task_block();
 	}
 
-	printf("\nClient method tests:");
+	//printf("\nClient method tests:");
 	bool r_access = OpenR(CLIENT2_QUEUE);
-	printf("\nTEST 1 - Can open read access: %s", r_access ? "PASS":"FAIL");
+	//printf("\nTEST 1 - Can open read access: %s", r_access ? "PASS":"FAIL");
 
 	r_access = OpenR(CLIENT1_QUEUE);
-	printf("\nTEST 2 - Re-open read access returns false: %s", r_access == 0 ? "PASS":"FAIL");
+	//printf("\nTEST 2 - Re-open read access returns false: %s", r_access == 0 ? "PASS":"FAIL");
 
 	_queue_id handler = OpenW();
-	printf("\nTEST 3 - Can open write access: %s", handler != 0 ? "PASS":"FAIL");
+	//printf("\nTEST 3 - Can open write access: %s", handler != 0 ? "PASS":"FAIL");
 
 	handler = OpenW();
-	printf("\nTEST 4 - Re-open read access returns 0: %s", handler == 0 ? "PASS":"FAIL");
+	//printf("\nTEST 4 - Re-open read access returns 0: %s", handler == 0 ? "PASS":"FAIL");
 
 	bool c_resp = Close();
-	printf("\nTEST 5 - Close response is true: %s", c_resp ? "PASS":"FAIL");
+	//printf("\nTEST 5 - Close response is true: %s", c_resp ? "PASS":"FAIL");
 
 	c_resp = Close();
-	printf("\nTEST 6 - Closing when task has neither read or write returns false: %s", c_resp == FALSE ? "PASS":"FAIL");
+	//printf("\nTEST 6 - Closing when task has neither read or write returns false: %s", c_resp == FALSE ? "PASS":"FAIL");
 
 	r_access = OpenR(CLIENT2_QUEUE);
-	printf("\nTEST 7 - After closing can open read access: %s", r_access ? "PASS":"FAIL");
+	//printf("\nTEST 7 - After closing can open read access: %s", r_access ? "PASS":"FAIL");
 
 	handler = OpenW();
-	printf("\nTEST 8 - After closing can open write access: %s", handler ? "PASS":"FAIL");
+	//printf("\nTEST 8 - After closing can open write access: %s", handler ? "PASS":"FAIL");
 
 	/* incomplete - testing _putline() */
 	char message[8];
@@ -103,6 +103,20 @@ void client2_task(os_task_param_t task_init_data)
 	bool put_response = _putline(handler, &message);
 	printf("\nput response: %d\n", put_response);
 	/* end of incomplete */
+
+	while (TRUE) {
+		HANDLER_MESSAGE_PTR handler_ptr = _msgq_receive(client2_qid, 0);
+
+		if (handler_ptr == NULL) {
+			printf("\nCould not receive a message\n");
+			_task_block();
+		}
+
+		printf("Client sees: %s\n", handler_ptr->DATA);
+
+		_msg_free(handler_ptr);
+	}
+
 
 #ifdef PEX_USE_RTOS
   while (1) {

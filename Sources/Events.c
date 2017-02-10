@@ -55,7 +55,7 @@ extern "C" {
 void myUART_RxCallback(uint32_t instance, void * uartState)
 {
   /* Write your code here ... */
-	UART_DRV_SendData(myUART_IDX, myRxBuff, sizeof(myRxBuff));
+	//UART_DRV_SendData(myUART_IDX, myRxBuff, sizeof(myRxBuff));
 	/* create a message */
 	HANDLER_MESSAGE_PTR 	handler_ptr;
 	bool					result;

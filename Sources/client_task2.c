@@ -68,53 +68,46 @@ void client2_task(os_task_param_t task_init_data)
 		_task_block();
 	}
 
-	//printf("\nClient method tests:");
-	bool r_access = OpenR(CLIENT2_QUEUE);
-	//printf("\nTEST 1 - Can open read access: %s", r_access ? "PASS":"FAIL");
+	printf("\nClient access tests:");
+	result = OpenR(CLIENT2_QUEUE);
+	printf("\nTEST 1 - Can open read access: %s", result ? "PASS":"FAIL");
 
-	r_access = OpenR(CLIENT1_QUEUE);
-	//printf("\nTEST 2 - Re-open read access returns false: %s", r_access == 0 ? "PASS":"FAIL");
+	result = OpenR(MASTER_QUEUE);
+	printf("\nTEST 2 - Re-open read access returns false: %s", result == 0 ? "PASS":"FAIL");
 
 	_queue_id handler = OpenW();
-	//printf("\nTEST 3 - Can open write access: %s", handler != 0 ? "PASS":"FAIL");
+	printf("\nTEST 3 - Cannot open write access because it is opened by master: %s", handler == 0 ? "PASS":"FAIL");
+
+	result = Close();
+	printf("\nTEST 4 - Close response is true: %s", result ? "PASS":"FAIL");
+
+	result = Close();
+	printf("\nTEST 5 - Closing when task has neither read or write returns false: %s", result == FALSE ? "PASS":"FAIL");
+
+	result = OpenR(CLIENT2_QUEUE);
+	printf("\nTEST 6 - After closing can open read access: %s", result ? "PASS":"FAIL");
 
 	handler = OpenW();
-	//printf("\nTEST 4 - Re-open read access returns 0: %s", handler == 0 ? "PASS":"FAIL");
+	printf("\nTEST 7 - Still cannot open write access because it is still held by master: %s", handler == 0 ? "PASS":"FAIL");
 
-	bool c_resp = Close();
-	//printf("\nTEST 5 - Close response is true: %s", c_resp ? "PASS":"FAIL");
+	printf("\nEnd of client access tests\n");
 
-	c_resp = Close();
-	//printf("\nTEST 6 - Closing when task has neither read or write returns false: %s", c_resp == FALSE ? "PASS":"FAIL");
-
-	r_access = OpenR(CLIENT2_QUEUE);
-	//printf("\nTEST 7 - After closing can open read access: %s", r_access ? "PASS":"FAIL");
-
-	handler = OpenW();
-	//printf("\nTEST 8 - After closing can open write access: %s", handler ? "PASS":"FAIL");
-
-	/* incomplete - testing _putline() */
-	char message[8];
-	message[0] = 't';
-	message[1] = 'e';
-	message[2] = 's';
-	message[3] = 't';
-	message[4] = '\0';
-	bool put_response = _putline(handler, &message);
-	printf("\nput response: %d\n", put_response);
-	/* end of incomplete */
-
+	/* Client 2 opens read access every 5 seconds */
+	char* message;
 	while (TRUE) {
-		HANDLER_MESSAGE_PTR handler_ptr = _msgq_receive(client2_qid, 0);
-
-		if (handler_ptr == NULL) {
-			printf("\nCould not receive a message\n");
-			_task_block();
+		/* get a line from the serial channel */
+		result = _getline(&message);
+		if(!result) {
+			printf("\nError reading message\n");
+		}
+		printf("Client sees: %s\n", message);
+		Close();
+		_time_delay(5000);
+		result = OpenR(CLIENT2_QUEUE);
+		if(!result) {
+			printf("\nError with Client 2 opening read access.\n");
 		}
 
-		printf("Client sees: %s\n", handler_ptr->DATA);
-
-		_msg_free(handler_ptr);
 	}
 
 

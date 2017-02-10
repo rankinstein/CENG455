@@ -28,6 +28,14 @@
 
 #ifndef __master_task_H
 #define __master_task_H
+
+/*
+ * Define task queue numbers
+ */
+#define MASTER_QUEUE				10
+#define CLIENT2_QUEUE				11
+
+
 /* MODULE master_task */
 
 #include "fsl_device_registers.h"
@@ -48,6 +56,8 @@
 extern "C" {
 #endif 
 
+
+
 /*
 ** ===================================================================
 **     Callback    : master_task
@@ -58,7 +68,6 @@ extern "C" {
 ** ===================================================================
 */
 void master_task(os_task_param_t task_init_data);
-
 
 /* END master_task */
 

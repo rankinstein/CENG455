@@ -59,8 +59,6 @@ char handler_buffer[HANDLER_MESSAGE_SIZE];
 int handler_cursor_position = 0;
 
 
-
-
 /*
  * Public serial access functions: OpenR, _readline, OpenW, _putline, Close
  */
@@ -101,7 +99,6 @@ bool OpenR(_mqx_uint stream_no) {
 			.read_access = TRUE };
 
 		_mutex_unlock(&read_access_mutex);
-		//printf("device %d opened: %d, %d, %d\n", stream_no, open_read[stream_no].client_id, open_read[stream_no].client_qid, open_read[stream_no].read_access);
 		return TRUE;
 	}
 	/* otherwise the device already has read access so return FALSE */
@@ -109,6 +106,44 @@ bool OpenR(_mqx_uint stream_no) {
 		_mutex_unlock(&read_access_mutex);
 		return FALSE;
 	}
+}
+
+/* _readline - Wait for input from the serial channel */
+bool _getline(char** message) {
+	/* check if task has read access */
+	bool has_read_access = FALSE;
+	/* obtain device_mutex */
+	if(_mutex_lock(&read_access_mutex) != MQX_OK) {
+		printf("\nError when trying to obtain device_mutex.\n");
+		return FALSE;
+	}
+
+	/* get client task id from client_qid */
+	_task_id client_task = _task_get_id();
+	_queue_id client_qid;
+
+	/* Check if task already has read access */
+	for(int i = 0; i < MAX_DEVICES; i++) {
+		if(open_read[i].client_id == client_task) {
+			has_read_access = TRUE;
+			client_qid = open_read[i].client_qid;
+			break;
+		}
+	}
+	_mutex_unlock(&read_access_mutex);
+	if(!has_read_access) {
+		return FALSE;
+	}
+
+	HANDLER_MESSAGE_PTR message_ptr = _msgq_receive(client_qid, 0);
+	if (message_ptr == NULL) {
+		printf("\nCould not receive a message\n");
+		return FALSE;
+	}
+
+	*message = message_ptr->DATA;
+	_msg_free(message_ptr);
+	return TRUE;
 }
 
 /* OpenW - Request write access */
@@ -128,7 +163,7 @@ _queue_id OpenW() {
 }
 
 
-/* INPROGRESS need to verify the insertion of the message DATA*/
+/* _putline - Send message to serial port */
 bool _putline(_queue_id qid, char* message_ptr) {
 	/* task must have write permission */
 	if(_mutex_lock(&write_access_mutex) != MQX_OK) {
@@ -148,8 +183,8 @@ bool _putline(_queue_id qid, char* message_ptr) {
 		return FALSE;
 	}
 
-	handler_ptr->HEADER.SOURCE_QID = UNKNOWN_QUEUE;
-	handler_ptr->HEADER.TARGET_QID = _msgq_get_id(0, HANDLER_QUEUE);
+	handler_ptr->HEADER.SOURCE_QID = SERIAL_UNDEFINED_QUEUE;
+	handler_ptr->HEADER.TARGET_QID = _msgq_get_id(0, SERIAL_HANDLER_QUEUE);
 	handler_ptr->HEADER.SIZE = sizeof(MESSAGE_HEADER_STRUCT) + sizeof(char) * HANDLER_MESSAGE_SIZE;
 	_mqx_uint i;
 	for (i=0; i < strlen(message_ptr); i++) {
@@ -208,13 +243,6 @@ bool Close() {
  * End of public serial access functions
  */
 
-/* Puts a char to the user terminal */
-void put_char(char c) {
-	unsigned char buf[13];
-	sprintf(buf, "\n\rType here: ");
-	UART_DRV_SendDataBlocking(myUART_IDX, buf, sizeof(buf), 1000);
-}
-
 /* Go back one character */
 void go_back_char() {
 	unsigned char char_array[4];
@@ -222,7 +250,6 @@ void go_back_char() {
 	char_array[1] = ' ';
 	char_array[2] = '\b';
 	char_array[3] = '\0';
-	//_time_delay_ticks(1);
 	UART_DRV_SendDataBlocking(myUART_IDX, char_array, sizeof(char) * strlen(char_array), 1000);
 
 	handler_buffer[handler_cursor_position--] = '\0';
@@ -254,7 +281,7 @@ void send_message_to_readers() {
 	broadcast_to[broadcast_ctr] = MSGPOOL_NULL_POOL_ID;
 
 	HANDLER_MESSAGE_PTR handler_ptr = (HANDLER_MESSAGE_PTR)_msg_alloc(message_pool);
-	handler_ptr->HEADER.SOURCE_QID = _msgq_get_id(0, HANDLER_QUEUE);
+	handler_ptr->HEADER.SOURCE_QID = _msgq_get_id(0, SERIAL_HANDLER_QUEUE);
 	handler_ptr->HEADER.SIZE = sizeof(MESSAGE_HEADER_STRUCT) + sizeof(char) * HANDLER_MESSAGE_SIZE;
 	_mqx_uint i;
 	for (i=0; i < handler_cursor_position; i++) {
@@ -289,7 +316,6 @@ void handle_char(unsigned char c) {
 			go_back_char();
 		}
 	} else if (c == 0x0d) {
-		printf("New line.\n");
 		// send to listeners
 		send_message_to_readers();
 		// output \n\r
@@ -325,13 +351,13 @@ void serial_driver(os_task_param_t task_init_data)
   /* Write your local variable definition here */
 	printf("serialTask Created\n\r");
 
-		HANDLER_MESSAGE_PTR handler_ptr;
-		_mqx_uint	i;
+		HANDLER_MESSAGE_PTR		handler_ptr;
+		_mqx_uint				i;
+		bool					result;
 
-		bool		result;
 
 		/* open a message queue */
-		handler_qid = _msgq_open(HANDLER_QUEUE, 0);
+		handler_qid = _msgq_open(SERIAL_HANDLER_QUEUE, 0);
 
 		if (handler_qid == 0) {
 			printf("\nCould not open the server message queue.\n");
@@ -377,23 +403,22 @@ void serial_driver(os_task_param_t task_init_data)
 		 * Handler consume message loop
 		 */
 		while (TRUE) {
+			/* Consume the next message in the queue */
 			handler_ptr = _msgq_receive(handler_qid, 0);
-
 			if (handler_ptr == NULL) {
 				printf("\nCould not receive a message\n");
 				_task_block();
 			}
 
-			if (handler_ptr->HEADER.SOURCE_QID == ISR_QUEUE) {
-				handle_char(handler_ptr->DATA[0]);
-				/* switch statement for handling individual messages */
-			} else {
-				//printf("\nGot a message not from the ISR.\n");
-				//printf("%d\n", handler_ptr->HEADER.SOURCE_QID);
-				printf("%s\n", handler_ptr->DATA);
-				printf("%d\n", strlen(handler_ptr->DATA));
+			/* If the message is from the ISR handle the input characters */
+			if (handler_ptr->HEADER.SOURCE_QID == SERIAL_ISR_QUEUE) {
+				for(i=0; handler_ptr->DATA[i] != '\0'; i++) {
+					handle_char(handler_ptr->DATA[i]);
+				}
+			}
+			/* Otherwise the message is from _putline() */
+			else {
 				UART_DRV_SendDataBlocking(myUART_IDX, handler_ptr->DATA, sizeof(char) * strlen(handler_ptr->DATA), 1000);
-				/* switch statement for handling individual messages */
 			}
 
 			_msg_free(handler_ptr);
@@ -401,10 +426,6 @@ void serial_driver(os_task_param_t task_init_data)
 		/*
 		 * end of consume message loop
 		 */
-
-		unsigned char buf[13];
-		sprintf(buf, "\n\rType here: ");
-		UART_DRV_SendDataBlocking(myUART_IDX, buf, sizeof(buf), 1000);
 
 #ifdef PEX_USE_RTOS
   while (1) {

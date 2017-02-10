@@ -52,18 +52,17 @@ extern "C" {
 */
 void master_task(os_task_param_t task_init_data)
 {
-  /* Write your local variable definition here */
-
 	printf("Master Created\n\r");
 
 	HANDLER_MESSAGE_PTR client1_ptr;
-	_mqx_uint	i;
-	_queue_id	master_qid;
-	bool		result;
+	_mqx_uint			i;
+	_queue_id			master_qid;
+	_queue_id 			serial_driver_qid;
+	bool				result;
+	char*				message;
 
 	/* open a message queue */
-	master_qid = _msgq_open(CLIENT1_QUEUE, 0);
-
+	master_qid = _msgq_open(MASTER_QUEUE, 0);
 	if (master_qid == 0) {
 		printf("\nCould not open client1 queue.\n");
 		_task_block();
@@ -76,33 +75,39 @@ void master_task(os_task_param_t task_init_data)
 		_task_block();
 	}
 
-	bool r_access = OpenR(CLIENT1_QUEUE);
-	while (TRUE) {
-		HANDLER_MESSAGE_PTR handler_ptr = _msgq_receive(master_qid, 0);
-
-		if (handler_ptr == NULL) {
-			printf("\nCould not receive a message\n");
-			_task_block();
-		}
-
-		printf("Master sees: %s\n", handler_ptr->DATA);
-
-		_msg_free(handler_ptr);
+	/* Open read access to serial driver */
+	result = OpenR(MASTER_QUEUE);
+	if(!result) {
+		printf("\nCould not establish read access to serial driver.\n");
+		_task_block();
 	}
 
+	/* Open write access to serial driver */
+	serial_driver_qid = OpenW();
+	if(serial_driver_qid == 0) {
+		printf("\nCould not establish write access to the serial driver.\n");
+	}
+
+	/* Master reads input from the serial channel and echos it back */
+	while(TRUE) {
+		/* get a line from the serial channel */
+		result = _getline(&message);
+		if(!result) {
+			printf("\nError reading message\n");
+		}
+
+		/* put the line back to the serial channel */
+		result = _putline(serial_driver_qid, message);
+		if(!result) {
+			printf("\nError putting message\n");
+		}
+	}
 
 
 #ifdef PEX_USE_RTOS
   while (1) {
 #endif
-    /* Write your code here ... */
-    
-    
     OSA_TimeDelay(10);                 /* Example code (for task release) */
-   
-    
-    
-    
 #ifdef PEX_USE_RTOS   
   }
 #endif    

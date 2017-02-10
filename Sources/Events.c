@@ -54,12 +54,8 @@ extern "C" {
 */
 void myUART_RxCallback(uint32_t instance, void * uartState)
 {
-  /* Write your code here ... */
-	//UART_DRV_SendData(myUART_IDX, myRxBuff, sizeof(myRxBuff));
 	/* create a message */
 	HANDLER_MESSAGE_PTR 	handler_ptr;
-	bool					result;
-	_mqx_uint				i;
 
 	handler_ptr = (HANDLER_MESSAGE_PTR)_msg_alloc(message_pool);
 
@@ -67,14 +63,14 @@ void myUART_RxCallback(uint32_t instance, void * uartState)
 		return;
 	}
 
-	handler_ptr->HEADER.SOURCE_QID = ISR_QUEUE;
-	handler_ptr->HEADER.TARGET_QID = _msgq_get_id(0, HANDLER_QUEUE);
+	handler_ptr->HEADER.SOURCE_QID = SERIAL_ISR_QUEUE;
+	handler_ptr->HEADER.TARGET_QID = _msgq_get_id(0, SERIAL_HANDLER_QUEUE);
 	handler_ptr->HEADER.SIZE = sizeof(MESSAGE_HEADER_STRUCT) + strlen((char *)handler_ptr->DATA) + 1;
-	for (i=0; i<sizeof(myRxBuff); i++) {
+	for (_mqx_uint i=0; i<sizeof(myRxBuff); i++) {
 		handler_ptr->DATA[i] = myRxBuff[i];
 	}
 
-	result = _msgq_send(handler_ptr);
+	bool result = _msgq_send(handler_ptr);
 
 	if (result != TRUE) {
 		return;

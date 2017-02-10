@@ -51,16 +51,18 @@ extern "C" {
 #include <message.h>
 #include <mutex.h>
 /*
- * queue numbers's
+ * serial driver queue numbers's
  */
-#define UNKNOWN_QUEUE   7 // used when the message source is unkown
-#define HANDLER_QUEUE	8
-#define ISR_QUEUE		9
-#define CLIENT1_QUEUE	10
-#define CLIENT2_QUEUE	11
-/*
- * end of queue numbers's
- */
+#ifndef SERIAL_UNDEFINED_QUEUE
+#define SERIAL_UNDEFINED_QUEUE  	7 // used when the message source is unknown
+#endif
+#ifndef SERIAL_HANDLER_QUEUE
+#define SERIAL_HANDLER_QUEUE		8
+#endif
+#ifndef SERIAL_ISR_QUEUE
+#define SERIAL_ISR_QUEUE			9
+#endif
+
 
 /*
  * max number of clients who can open read or write access
@@ -69,12 +71,19 @@ extern "C" {
  */
 #define MAX_DEVICES			20
 
+
 /*
  * max # of waiting messages
  */
 #define NUM_HANDLER_MESSAGES	(10)
 
+
+/*
+ * max # of data characters in a handler message
+ */
 #define HANDLER_MESSAGE_SIZE 256
+
+
 /*
  * structures
  */
@@ -103,11 +112,22 @@ MUTEX_STRUCT write_access_mutex;
  * end of mutexes
  */
 
+/* serial driver message pool */
 extern _pool_id message_pool;
+
+
+/*
+ * Public serial driver access functions
+ */
 extern bool OpenR(_mqx_uint stream_no);
+extern bool _getline(char** message);
 extern _queue_id OpenW();
 extern bool _putline(_queue_id, char*);
 extern bool Close();
+/*
+ * end of public access functions
+ */
+
 
 /*
 ** ===================================================================
